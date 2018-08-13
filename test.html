@@ -45,9 +45,11 @@
             <label for="ip">IP</label>
             <input type="text" class="form-control" id="ip" name="ip" placeholder="IP">
           </div>
-          <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="dryrun" name="dryrun">
-            <label class="form-check-label" for="dryrun">Dry run. Don't actually send the requests.</label>
+          <div class="form-group">
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="dryrun" name="dryrun" value="dryrun">
+              <label class="form-check-label" for="dryrun">Dry run. Don't actually send the requests.</label>
+            </div>
           </div>
           <input type="hidden" name="verbose" value="verbose">
           <button type="submit" class="btn btn-primary">Submit</button>
