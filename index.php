@@ -22,11 +22,12 @@ if(!(isset($_GET['ip']))){die('IP required.');}
 
 $NamecheapDDNS = new NamecheapDDNS(
   $_GET['username'],
-  $_GET['password'],
+  $_GET['password']
+);
+$NamecheapDDNS->Update(
   $_GET['hostname'],
   $_GET['ip']
 );
-$NamecheapDDNS->Update($IP);
 
 class NamecheapDDNS{
   private $NamecheapAPIUsername = '[ENTER YOUR NAMECHEAP API USERNAME]';
