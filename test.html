@@ -18,6 +18,19 @@
         <h1>DDNS Tester</h1>
         
         <form action="index.php" method="GET">
+          
+          <div class="form-group">
+            <label for="hostname">DDNS Username</label>
+            <input type="text" class="form-control" id="ddnsUsername" name="ddnsUsername">
+          </div>
+          
+          <div class="form-group">
+            <label for="hostname">DDNS Password</label>
+            <input type="text" class="form-control" id="ddnsPassword" name="ddnsPassword">
+          </div>
+          
+          <br>
+          
           <div class="form-group">
             <label for="apikey">Namecheap API Key</label>
             <input type="text" class="form-control" id="apikey" name="apikey" aria-describedby="apikeyHelp" placeholder="Namecheap API Key">
