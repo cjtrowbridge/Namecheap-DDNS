@@ -20,9 +20,16 @@ if(!(isset($_GET['password']))){die('Password required.');}
 if(!(isset($_GET['hostname']))){die('Hostname required.');}
 if(!(isset($_GET['ip']))){die('IP required.');}
 
+if(file_exists('Config.php')){
+  include('Config.php');
+}else{
+  die('Create a config file from Config.Sample.php');
+}
+
 $NamecheapDDNS = new NamecheapDDNS(
-  $_GET['username'],
-  $_GET['password']
+  $NamecheapAPIUsername,
+  $NamecheapAPIKey,
+  $NamecheapUsername
 );
 $NamecheapDDNS->Update(
   $_GET['hostname'],
@@ -30,9 +37,9 @@ $NamecheapDDNS->Update(
 );
 
 class NamecheapDDNS{
-  private $NamecheapAPIUsername = '[ENTER YOUR NAMECHEAP API USERNAME]';
-  private $NamecheapAPIKey      = '[ENTER YOUR NAMECHEAP API KEY]';
-  private $NamecheapUsername    = '[ENTER YOUR NAMECHEAP USERNAME]';
+  private $NamecheapAPIUsername = false;
+  private $NamecheapAPIKey      = false;
+  private $NamecheapUsername    = false;
   private $Verbose              = false;
   private $DryRun               = false;
   private $ExistingRecords      = false;
@@ -41,7 +48,11 @@ class NamecheapDDNS{
   private $SLD                  = false;
   
   
-  function __construct($Username, $Password){
+  function __construct($NamecheapAPIUsername,$NamecheapAPIKey,$NamecheapUsername){
+    $this->NamecheapAPIUsername = $NamecheapAPIUsername;
+    $this->NamecheapAPIKey      = $NamecheapAPIKey;
+    $this->NamecheapUsername    = $NamecheapUsername;
+    
     if(isset($_REQUEST['verbose'])){
       $this->Verbose = true;
     }
