@@ -26,6 +26,13 @@ if(file_exists('Config.php')){
   die('Create a config file from Config.Sample.php');
 }
 
+if(!(
+  isset($ValidUsers[$_GET['username']]) &&
+  $ValidUsers[$_GET['username']] == password_hash($_GET['password'])
+)){
+  die('Invalid username or password.');
+}
+
 $NamecheapDDNS = new NamecheapDDNS(
   $NamecheapAPIUsername,
   $NamecheapAPIKey,
