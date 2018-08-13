@@ -154,7 +154,10 @@ class NamecheapDDNS{
     }
     curl_close($cURL);
     
-    if($this->Verbose){
+    if(
+      $this->Verbose
+      && !($this->DryRun) 
+    ){
       echo '<p>Response: '.$URL.'</p></fieldset>';
     }
 
