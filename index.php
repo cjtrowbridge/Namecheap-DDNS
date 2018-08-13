@@ -75,12 +75,12 @@ class NamecheapDDNS{
     */
     
     //Fetch existing records from the Namecheap API
-    $ExistingRecords = $this->APIRequest(
+    $ExistingRecords = $this->APIRequest(array(
       'Command'     => 'namecheap.domains.dns.getHosts',
       'ClientIp'    => $ClientIP,
       'SLD'         => $SLD,
       'TLD'         => $TLD
-    );
+    ));
     
     //Parse existing records into some kind of normal format instead of XML.
     
@@ -89,7 +89,7 @@ class NamecheapDDNS{
     
     
     //Submit new records to replace existing records
-    $SaveChanges = $this->APIRequest(
+    $SaveChanges = $this->APIRequest(array(
       'Command'     => 'namecheap.domains.dns.setHosts',
       'ClientIp'    => $ClientIP,
       'SLD'         => $SLD,
@@ -98,7 +98,7 @@ class NamecheapDDNS{
       'RecordType1' => 'CNAME',
       'Address1'    => $IP,
       'TTL1'        => '100'
-    );
+    ));
     
   }
   
