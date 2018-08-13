@@ -12,6 +12,9 @@
 
 */
 
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+
 if(!(isset($_GET['username']))){die('Username required.');}
 if(!(isset($_GET['password']))){die('Password required.');}
 if(!(isset($_GET['hostname']))){die('Hostname required.');}
