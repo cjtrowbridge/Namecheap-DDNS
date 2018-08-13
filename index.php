@@ -25,10 +25,14 @@ class NamecheapDDNS{
   private $NamecheapAPIKey      = '[ENTER YOUR NAMECHEAP API KEY]';
   private $NamecheapUsername    = '[ENTER YOUR NAMECHEAP USERNAME]';
   private $Verbose              = false;
+  private $DryRun               = false;
   
   function __construct($Username, $Password){
     if(isset($_REQUEST['verbose'])){
       $this->Verbose = true;
+    }
+    if(isset($_REQUEST['dryrun'])){
+      $this->DryRun = true;
     }
   }
   
@@ -137,7 +141,11 @@ class NamecheapDDNS{
     curl_setopt($cURL,CURLOPT_URL, $URL);
 
     //Run cURL and close it
-    $Data = curl_exec($cURL);
+    if($this->DryRun){
+      $Data = '[DRY RUN: No Response.]';
+    }else{
+      $Data = curl_exec($cURL);
+    }
     curl_close($cURL);
     
     if($this->Verbose){
