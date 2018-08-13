@@ -86,7 +86,7 @@ class NamecheapDDNS{
     $this->ExistingRecords = $this->APIRequest(array(
       'Command'     => 'namecheap.domains.dns.getHosts',
       'SLD'         => $this->SLD,
-      'TLD'         => $rhis->TLD
+      'TLD'         => $this->TLD
     ));
     
   }
