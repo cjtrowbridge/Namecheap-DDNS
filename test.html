@@ -1,0 +1,47 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>DDNS Tester</title>
+    <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    
+
+    <main role="main" class="container">
+
+      <div class="starter-template">
+        <h1>DDNS Tester</h1>
+        
+        <form action="" method="GET">
+          <div class="form-group">
+            <label for="apikey">Namecheap API Key</label>
+            <input type="text" class="form-control" id="apikey" name="apikey" aria-describedby="apikeyHelp" placeholder="Namecheap API Key">
+            <small id="apikeyHelp" class="form-text text-muted">You can find this <a href="https://ap.www.namecheap.com/settings/tools/apiaccess/" target="_blank">here</a>.</small>
+          </div>
+          <div class="form-group">
+            <label for="hostname">Hostname</label>
+            <input type="text" class="form-control" id="hostname" name="hostname" aria-describedby="hostnameHelp" placeholder="Hostname">
+            <small id="hostnameHelp" class="form-text text-muted">This should be in the format "[SD.]SLD.TLD"</small>
+          </div>
+          <div class="form-group">
+            <label for="ip">IP</label>
+            <input type="text" class="form-control" id="ip" name="ip" placeholder="IP">
+          </div>
+          <input type="hidden" name="verbose" value="verbose">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        
+      </div>
+
+    </main><!-- /.container -->
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://getbootstrap.com/docs/4.0/assets/js/vendor/popper.min.js"></script>
+    <script src="https://getbootstrap.com/docs/4.0/dist../../dist/js/bootstrap.min.js"></script>
+  </body>
+</html>
