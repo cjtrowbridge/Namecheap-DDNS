@@ -36,6 +36,10 @@ class NamecheapDDNS{
   private $Verbose              = false;
   private $DryRun               = false;
   private $ExistingRecords      = false;
+  private $ClientIP             = false;
+  private $TLD                  = false;
+  private $SLD                  = false;
+  
   
   function __construct($Username, $Password){
     if(isset($_REQUEST['verbose'])){
@@ -48,13 +52,33 @@ class NamecheapDDNS{
   
   public function Update($DDNSHostname, $DDNSClientIP){
     
+    $Domains = explode('.',$DDNSHostname);
+    
+    $this->TLD = substr($DDNSHostname,(0-strrpos($DDNSHostname,'.')));
+    $this->SLD = substr($DDNSHostname,0,strrpos($DDNSHostname,'.'));
+    
+    //Prepend a protocol to the IP so the CNAME alias will work.
+    $IP = 'http://'.$IP;
+    
+    //Get the IP of the server for the requests since for some reason Namecheap is not able to do this themselves.
+    $this->ClientIP = $_SERVER['SERVER_ADDR'];
+        
+    /*
+      Namecheap's DNS API is really terrible. First we need to get a list of all current records, 
+      then update it to reflect changes, then submit it to save changes. 
+      Otherwise, only the new record we submit will be saved and all other records will be deleted.
+    */
+    
     //Get a list of current records for the domain
     $this->getRecords($DDNSHostname);
-    
+
     //Check if hostname is in list of hostnames fetched from API.
     
+    //Create CNAME if no match
     
-    //Create CNAME if no match, update CNAME if match. Otherwise error.
+    //Update CNAME if match
+    
+    //Otherwise error
     
   }
   
@@ -73,27 +97,6 @@ class NamecheapDDNS{
   
   private function updateCNAME($Hostname,$IP){
     //Updates the specified CNAME record to point to the specified IP
-    
-    $Domains = explode('.',$Hostname);
-    
-    $TLD = substr($Hostname,(0-strrpos($Hostname,'.')));
-    $SLD = substr($Hostname,0,strrpos($Hostname,'.'));
-    
-    //Prepend a protocol to the IP so the CNAME alias will work.
-    $IP = 'http://'.$IP;
-    
-    //Get the IP of the server for the requests since for some reason Namecheap is not able to do this themselves.
-    $ClientIP = $_SERVER['SERVER_ADDR'];
-    
-    /*
-      Namecheap's DNS API is really terrible. First we need to get a list of all current records, 
-      then update it to reflect changes, then submit it to save changes. 
-      Otherwise, only the new record we submit will be saved and all other records will be deleted.
-    */
-    
-    
-    
-    //Parse existing records into some kind of normal format instead of XML.
     
     
     //Update existing records to reflect the change.
@@ -132,10 +135,7 @@ class NamecheapDDNS{
     //Run request.
     $Data = $this->Request($APIServer,$Arguments);
     
-    
-    
-    //Parse results.
-    
+    return $Data;
     
   }
   
@@ -163,7 +163,6 @@ class NamecheapDDNS{
       echo '<p>Response: '.$URL.'</p></fieldset>';
     }
 
-    //Return data
     return $Data;
   }
   
