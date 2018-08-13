@@ -36,7 +36,7 @@ class NamecheapDDNS{
   private $Verbose              = false;
   private $DryRun               = false;
   private $ExistingRecords      = false;
-  private $ClientIP             = false;
+  private $ClientAddress        = false;
   private $TLD                  = false;
   private $SLD                  = false;
   
@@ -58,11 +58,8 @@ class NamecheapDDNS{
     $this->SLD = substr($DDNSHostname,0,strrpos($DDNSHostname,'.'));
     
     //Prepend a protocol to the IP so the CNAME alias will work.
-    $IP = 'http://'.$IP;
+    $this->ClientAddress = 'http://'.$DDNSClientIP;
     
-    //Get the IP of the server for the requests since for some reason Namecheap is not able to do this themselves.
-    $this->ClientIP = $_SERVER['SERVER_ADDR'];
-        
     /*
       Namecheap's DNS API is really terrible. First we need to get a list of all current records, 
       then update it to reflect changes, then submit it to save changes. 
@@ -88,9 +85,8 @@ class NamecheapDDNS{
     
     $this->ExistingRecords = $this->APIRequest(array(
       'Command'     => 'namecheap.domains.dns.getHosts',
-      'ClientIp'    => $ClientIP,
-      'SLD'         => $SLD,
-      'TLD'         => $TLD
+      'SLD'         => $this->SLD,
+      'TLD'         => $rhis->TLD
     ));
     
   }
@@ -105,7 +101,6 @@ class NamecheapDDNS{
     //Submit new records to replace existing records
     $SaveChanges = $this->APIRequest(array(
       'Command'     => 'namecheap.domains.dns.setHosts',
-      'ClientIp'    => $ClientIP,
       'SLD'         => $SLD,
       'TLD'         => $TLD,
       'HostName1'   => '@',
