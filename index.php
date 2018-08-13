@@ -12,9 +12,14 @@
 
 */
 
+if(!(isset($_GET['username']))){die('Username required.');}
+if(!(isset($_GET['password']))){die('Password required.');}
+if(!(isset($_GET['hostname']))){die('Hostname required.');}
+if(!(isset($_GET['ip']))){die('IP required.');}
+
 $NamecheapDDNS = new NamecheapDDNS(
-  $_SERVER['PHP_AUTH_USER'],
-  $_SERVER['PHP_AUTH_PW'],
+  $_GET['username'],
+  $_GET['password'],
   $_GET['hostname'],
   $_GET['ip']
 );
