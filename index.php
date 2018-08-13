@@ -35,6 +35,7 @@ class NamecheapDDNS{
   private $NamecheapUsername    = '[ENTER YOUR NAMECHEAP USERNAME]';
   private $Verbose              = false;
   private $DryRun               = false;
+  private $ExistingRecords      = false;
   
   function __construct($Username, $Password){
     if(isset($_REQUEST['verbose'])){
@@ -48,7 +49,7 @@ class NamecheapDDNS{
   public function Update($DDNSHostname, $DDNSClientIP){
     
     //Get a list of current records for the domain
-    $DomainList = $this->getRecords($DDNSHostname);
+    $this->getRecords($DDNSHostname);
     
     //Check if hostname is in list of hostnames fetched from API.
     
@@ -60,6 +61,13 @@ class NamecheapDDNS{
   
   private function getRecords(){
     //Fetches a list of DNS records associated with the domain in the Namecheap API.
+    
+    $this->ExistingRecords = $this->APIRequest(array(
+      'Command'     => 'namecheap.domains.dns.getHosts',
+      'ClientIp'    => $ClientIP,
+      'SLD'         => $SLD,
+      'TLD'         => $TLD
+    ));
     
   }
   
@@ -83,13 +91,7 @@ class NamecheapDDNS{
       Otherwise, only the new record we submit will be saved and all other records will be deleted.
     */
     
-    //Fetch existing records from the Namecheap API
-    $ExistingRecords = $this->APIRequest(array(
-      'Command'     => 'namecheap.domains.dns.getHosts',
-      'ClientIp'    => $ClientIP,
-      'SLD'         => $SLD,
-      'TLD'         => $TLD
-    ));
+    
     
     //Parse existing records into some kind of normal format instead of XML.
     
