@@ -21,26 +21,132 @@ $NamecheapDDNS = new NamecheapDDNS(
 $NamecheapDDNS->Update($IP);
 
 class NamecheapDDNS{
-  private $DDNSClientUsername = false;
-  private $DDNSClientPassword = false;
-  private $NamecheapAPIKey = '';
+  private $NamecheapAPIUsername = '[ENTER YOUR NAMECHEAP API USERNAME]';
+  private $NamecheapAPIKey      = '[ENTER YOUR NAMECHEAP API KEY]';
+  private $NamecheapUsername    = '[ENTER YOUR NAMECHEAP USERNAME]';
+  private $Verbose              = false;
   
   function __construct($Username, $Password){
-    $this->DDNSClientUsername = $Username;
-    $this->DDNSClientPassword = $Username;
-    
-    //Fetch list of cname records for the given domain.
-    
-    //If authentication fails, throw an error.
-    
+    if(isset($_REQUEST['verbose'])){
+      $this->Verbose = true;
+    }
   }
   
-  public function Update($DDNSClientIP){
+  public function Update($DDNSHostname, $DDNSClientIP){
+    
+    //Get a list of current records for the domain
+    $DomainList = $this->getRecords($DDNSHostname);
     
     //Check if hostname is in list of hostnames fetched from API.
+    
     
     //Create CNAME if no match, update CNAME if match. Otherwise error.
     
   }
+  
+  
+  private function getRecords(){
+    //Fetches a list of DNS records associated with the domain in the Namecheap API.
+    
+  }
+  
+  private function updateCNAME($Hostname,$IP){
+    //Updates the specified CNAME record to point to the specified IP
+    
+    $Domains = explode('.',$Hostname);
+    
+    $TLD = substr($Hostname,(0-strrpos($Hostname,'.')));
+    $SLD = substr($Hostname,0,strrpos($Hostname,'.'));
+    
+    //Prepend a protocol to the IP so the CNAME alias will work.
+    $IP = 'http://'.$IP;
+    
+    //Get the IP of the server for the requests since for some reason Namecheap is not able to do this themselves.
+    $ClientIP = $_SERVER['SERVER_ADDR'];
+    
+    /*
+      Namecheap's DNS API is really terrible. First we need to get a list of all current records, 
+      then update it to reflect changes, then submit it to save changes. 
+      Otherwise, only the new record we submit will be saved and all other records will be deleted.
+    */
+    
+    //Fetch existing records from the Namecheap API
+    $ExistingRecords = $this->APIRequest(
+      'Command'     => 'namecheap.domains.dns.getHosts',
+      'ClientIp'    => $ClientIP,
+      'SLD'         => $SLD,
+      'TLD'         => $TLD
+    );
+    
+    //Parse existing records into some kind of normal format instead of XML.
+    
+    
+    //Update existing records to reflect the change.
+    
+    
+    //Submit new records to replace existing records
+    $SaveChanges = $this->APIRequest(
+      'Command'     => 'namecheap.domains.dns.setHosts',
+      'ClientIp'    => $ClientIP,
+      'SLD'         => $SLD,
+      'TLD'         => $TLD,
+      'HostName1'   => '@',
+      'RecordType1' => 'CNAME',
+      'Address1'    => $IP,
+      'TTL1'        => '100'
+    );
+    
+  }
+  
+  private function APIRequest($PassedArguments){
+    //Add each passed argument to the array.
+    foreach($PassedArguments as $Key => $Value){
+      $Arguments[$Key]=$Value;
+    }
+    
+    //Add all requried global arguments to the array.
+    $Arguments['ApiUser']  = $this->NamecheapAPIUsername;
+    $Arguments['ApiKey']   = $this->NamecheapAPIKey;
+    $Arguments['UserName'] = $this->NamecheapUsername;
+    $Arguments['ClientIp'] = $_SERVER['SERVER_ADDR'];
+    
+    //Comment out whichever server you don't want to use. Start with sandbox and test your configuration before running in production mode.
+    $APIServer = 'https://api.sandbox.namecheap.com/xml.response';
+    //$APIServer = 'https://api.namecheap.com/xml.response';
+    
+    //Run request.
+    $Data = $this->Request($APIServer,$Arguments);
+    
+    
+    
+    //Parse results.
+    
+    
+  }
+  
+  private function Request($URL, $Arguments = false){
+    //Add arguments onto the URL.
+    $URL.='?'.http_build_query($Arguments);
+    
+    if($this->Verbose){
+      echo '<fieldset><p>Running Request: '.$URL.'</p><hr>';
+    }
+    
+    //Set up cURL  
+    $cURL = curl_init();
+    curl_setopt($cURL,CURLOPT_URL, $URL);
+
+    //Run cURL and close it
+    $Data = curl_exec($cURL);
+    curl_close($cURL);
+    
+    if($this->Verbose){
+      echo '<p>Response: '.$URL.'</p></fieldset>';
+    }
+
+    //Return data
+    return $Data;
+  }
+  
   
 }
