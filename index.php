@@ -28,7 +28,7 @@ if(file_exists('Config.php')){
 
 if(!(
   isset($ValidUsers[$_GET['username']]) &&
-  $ValidUsers[$_GET['username']] == password_hash($_GET['password'])
+  $ValidUsers[$_GET['username']] == password_hash($_GET['password'],PASSWORD_BCRYPT)
 )){
   die('Invalid username or password.');
 }
